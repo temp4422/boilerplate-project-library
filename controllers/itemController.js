@@ -12,22 +12,11 @@ const postItem = async (req, res) => {
     if (!title) return res.send('missing required field title')
 
     const itemX = new ItemModel({
-      // _id automatically added
       title: title,
       comments: [],
       commentcount: 0,
     })
 
-    // Find project with ASYNC opearation, must use 'await'!
-    // let projectX = await ProjectModel.findOne({ project_name: projectName })
-
-    // If project doesn't exists, create one
-    // if (!projectX) projectX = await ProjectModel.create({ project_name: projectName })
-
-    // If project exists push issue into this project
-    // projectX.issues.push(issueX)
-
-    // Save to database
     await itemX.save()
     return res.json({ _id: itemX._id, title: itemX.title })
   } catch (error) {
@@ -52,7 +41,7 @@ const getItem = async (req, res) => {
 }
 
 // *** PUT ITEM ***
-// PUT /api/books/:bookid Form Encoded: _id=bookID&comment=testcommentXXX
+// PUT /api/books/:bookid Form Encoded: comment=XXX
 const putItem = async (req, res) => {
   let bookId = req.params.bookid
   const reqBody = req.body
@@ -63,12 +52,10 @@ const putItem = async (req, res) => {
     if (!ObjectId.isValid(bookId)) return res.send('no book exists')
     if (!comment) return res.send('missing required field comment')
 
-    // Find item and update
     const itemX = await ItemModel.findOne({ _id: bookId })
     itemX.comments.push(comment)
     itemX.commentcount++
     await itemX.save()
-
     return res.send(itemX)
   } catch (error) {
     console.log(error)
@@ -77,24 +64,16 @@ const putItem = async (req, res) => {
 }
 
 // *** DELETE ITEM ***
-// DELETE /api/issues/apitest Form Encoded: _id=64ddeeeb5977467f332b2f7a
+// DELETE /api/books/:bookid
 const deleteItem = async (req, res) => {
-  let projectName = req.params.project
-  const { _id } = req.body
+  let bookId = req.params.bookid
 
   try {
-    if (!req.body._id) return res.json({ error: 'missing _id' })
-    if (!ObjectId.isValid(_id)) return res.json({ error: 'could not delete', _id: _id })
+    if (!bookId) return res.send('no book exists')
+    if (!ObjectId.isValid(bookId)) return res.send('no book exists')
 
-    // Delete (update with $pull) https://dev.to/paulasantamaria/mongodb-animated-adding-and-removing-elements-from-arrays-50cl
-    const confirmDelete = await ProjectModel.updateOne(
-      { 'issues._id': _id },
-      { $pull: { issues: { _id: _id } } }
-    )
-    // console.log(confirmDelete.matchedCount)
-    if (!confirmDelete.matchedCount) return res.json({ error: 'could not delete', _id: _id })
-
-    return res.json({ result: 'successfully deleted', _id: _id })
+    const itemX = await ItemModel.deleteOne({ _id: bookId })
+    res.send('delete successful')
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: 'Server error' })

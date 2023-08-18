@@ -326,5 +326,33 @@
             ]
         },
         "tests": []
+    },
+    {
+        "_id": "e39b0187-7f76-4079-a2c5-a014bf7a4448",
+        "colId": "history",
+        "containerId": "",
+        "name": "http://localhost:3000/api/books/64df5c69b0ccf2f5099e376e",
+        "url": "http://localhost:3000/api/books/64df5c69b0ccf2f5099e376e",
+        "method": "DELETE",
+        "sortNum": 0,
+        "created": "2023-08-18T12:04:00.701Z",
+        "modified": "2023-08-18T12:04:00.701Z",
+        "headers": [],
+        "params": [],
+        "tests": []
+    },
+    {
+        "_id": "322255d8-4d62-4ce5-89ad-2b99cd4e3e05",
+        "colId": "history",
+        "containerId": "",
+        "name": "http://localhost:3000/api/books/64df5e5e0b5270479683949f",
+        "url": "http://localhost:3000/api/books/64df5e5e0b5270479683949f",
+        "method": "DELETE",
+        "sortNum": 0,
+        "created": "2023-08-18T12:04:53.362Z",
+        "modified": "2023-08-18T12:04:53.362Z",
+        "headers": [],
+        "params": [],
+        "tests": []
     }
 ]
