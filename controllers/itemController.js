@@ -85,7 +85,14 @@ const deleteItem = async (req, res) => {
   let bookId = req.params.bookid
 
   try {
-    if (!bookId) return res.send('no book exists')
+    if (!bookId) {
+      const allItemsX = await ItemModel.deleteMany()
+      console.log(allItemsX)
+
+      // if (!itemX.deletedCount) return res.send('no book exists')
+
+      return res.send('delete successful')
+    }
     if (!ObjectId.isValid(bookId)) return res.send('no book exists')
 
     const itemX = await ItemModel.deleteOne({ _id: bookId })
@@ -98,4 +105,17 @@ const deleteItem = async (req, res) => {
   }
 }
 
-module.exports = { postItem, getItem, postItemComment, deleteItem }
+// *** DELETE ALL ITEM ***
+// DELETE /api/books
+const deleteAllItems = async (req, res) => {
+  try {
+    const allItemsX = await ItemModel.deleteMany()
+    if (!allItemsX) return res.send('no book exists')
+    return res.send('complete delete successful')
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ error: 'Server error' })
+  }
+}
+
+module.exports = { postItem, getItem, postItemComment, deleteItem, deleteAllItems }
