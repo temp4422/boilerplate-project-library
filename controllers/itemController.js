@@ -4,46 +4,44 @@ const ObjectId = mongoose.Types.ObjectId
 const { ItemModel } = require('../models/itemModel.js')
 
 // *** POST ITEM ***
-// POST /api/issues/apitest Form Encoded: issue_title=titleX&issue_text=textX&created_by=userX
+// POST /api/books Form Encoded: title=titleX
 const postItem = async (req, res) => {
-  let projectName = req.params.project // this take value from /api/issues/ANYPROJECT
+  // let projectName = req.params.project // this take value from /api/issues/ANYPROJECT
 
   // Use destructuring assignment to pull all fields from body object
   let reqBody = req.body
-  const { _id, issue_title, issue_text, created_by, assigned_to, status_text, open } = reqBody
+  console.log(reqBody)
+  const { title } = reqBody
 
   // Use try...catch block to handle errors for async operations
   try {
     // Check required fields
-    if (!issue_title || !issue_text || !created_by)
-      return res.json({ error: 'required field(s) missing' })
+    if (!title) return res.send('missing required field title')
 
     // Create issue
     // CUATION ! use either save() or create(), but not both, because it's duplicate https://stackoverflow.com/questions/38290684/mongoose-save-vs-insert-vs-create
-    const issueX = new ItemModel({
+    const itemX = new ItemModel({
       // _id automatically added
-      issue_title: issue_title, // Required
-      issue_text: issue_text, // Required
-      created_by: created_by, // Required
-      assigned_to: assigned_to, // Return empty
-      status_text: status_text, // Return empty
-      open: true, // Default true
-      created_on: new Date(), // Required
-      updated_on: new Date(), // Required
+      title: title,
+      comments: [],
+      commentcount: 0,
+      // issue_title: issue_title, // Required
+      // issue_text: issue_text, // Required
+      // created_by: created_by, // Required
     })
 
     // Find project with ASYNC opearation, must use 'await'!
-    let projectX = await ProjectModel.findOne({ project_name: projectName })
+    // let projectX = await ProjectModel.findOne({ project_name: projectName })
 
     // If project doesn't exists, create one
-    if (!projectX) projectX = await ProjectModel.create({ project_name: projectName })
+    // if (!projectX) projectX = await ProjectModel.create({ project_name: projectName })
 
     // If project exists push issue into this project
-    projectX.issues.push(issueX)
+    // projectX.issues.push(issueX)
 
     // Save to database
-    await projectX.save()
-    return res.json(issueX)
+    await itemX.save()
+    return res.json({ _id: itemX._id, title: itemX.title })
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: 'Server error' })
@@ -53,8 +51,9 @@ const postItem = async (req, res) => {
 // *** GET ITEM ***
 // GET /api/issues/apitest?open=false&issue_title=titleX&issue_text=textX
 const getItem = async (req, res) => {
-  let projectName = req.params.project
-  let reqQuery = req.query
+    let bookId = req.params
+    console.log(bookId)
+
 
   try {
     const projectX = await ProjectModel.findOne({ project_name: projectName })
