@@ -52,52 +52,24 @@ const getItem = async (req, res) => {
 }
 
 // *** PUT ITEM ***
-// PUT /api/issues/apitest Form Encoded: issue_title=titleX&issue_text=textX&created_by=userX
+// PUT /api/books/:bookid Form Encoded: _id=bookID&comment=testcommentXXX
 const putItem = async (req, res) => {
-  let projectName = req.params.project
+  let bookId = req.params.bookid
   const reqBody = req.body
-  const { _id, issue_title, issue_text, created_by, assigned_to, status_text, open } = reqBody
+  const { comment } = reqBody
 
   try {
-    if (!_id) return res.json({ error: 'missing _id' })
+    if (!bookId) return res.send('no book exists')
+    if (!ObjectId.isValid(bookId)) return res.send('no book exists')
+    if (!comment) return res.send('missing required field comment')
 
-    if (!ObjectId.isValid(_id)) return res.json({ error: 'could not update', _id: _id })
+    // Find item and update
+    const itemX = await ItemModel.findOne({ _id: bookId })
+    itemX.comments.push(comment)
+    itemX.commentcount++
+    await itemX.save()
 
-    if (!issue_title && !issue_text && !created_by && !assigned_to && !status_text && !open)
-      return res.json({ error: 'no update field(s) sent', _id: _id })
-
-    // Find project
-    const projectX = await ProjectModel.findOne({ project_name: projectName })
-
-    // FILTER current issue with JS find() native method
-    const issueX = projectX.issues.find((issue) => issue['_id'].toString() === _id)
-
-    if (!issueX) return res.json({ error: 'could not update', _id: _id })
-
-    // Create object to update current issue, keep same feilds if no query exists, because they will be overwritten
-    const updateObj = {
-      _id: issueX._id.toString(),
-      issue_title: issue_title || issueX.issue_title,
-      issue_text: issue_text || issueX.issue_text,
-      created_by: created_by || issueX.created_by,
-      assigned_to: assigned_to || issueX.assigned_to,
-      status_text: status_text || issueX.status_text,
-      open: open || issueX.open,
-      created_on: issueX.created_on,
-      updated_on: new Date(),
-    }
-
-    const findOneAndUpdate = await ProjectModel.findOneAndUpdate(
-      { 'issues._id': _id },
-      { $set: { 'issues.$': updateObj } },
-      { new: true }
-    )
-    // Log updated issue using find functionality
-    // console.log(findOneAndUpdate.issues.find((issue) => issue['_id'].toString() === _id))
-
-    if (!findOneAndUpdate) return res.json({ error: 'could not update', _id: _id })
-
-    return res.json({ result: 'successfully updated', _id: _id })
+    return res.send(itemX)
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: 'Server error' })
