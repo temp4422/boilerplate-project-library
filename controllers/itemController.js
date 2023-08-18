@@ -31,48 +31,10 @@ const getItem = async (req, res) => {
   let bookId = req.params.bookid
 
   try {
-    if (!bookId) {
-      const allItemsX = await ItemModel.find()
-
-      // // Filter fields
-      // const filteredItems = allItemsX.map((obj) => ({
-      //   _id: obj['_id'],
-      //   title: obj['title'],
-      //   commentcount: obj['commentcount'],
-      // }))
-
-      return res.json(allItemsX)
-      // return res.json(filteredItems)
-    }
-
+    if (!bookId) return res.send('no book exists')
     const itemX = await ItemModel.findOne({ _id: bookId })
     if (!itemX) return res.send('no book exists')
     return res.json(itemX)
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({ error: 'Server error' })
-  }
-}
-
-// *** POST ITEM.COMMENT ***
-// POST /api/books/:bookid Form Encoded: comment=XXX
-const postItemComment = async (req, res) => {
-  let bookId = req.params.bookid
-  const reqBody = req.body
-  const { comment } = reqBody
-
-  try {
-    if (!bookId) return res.send('no book exists')
-    if (!ObjectId.isValid(bookId)) return res.send('no book exists')
-    if (!comment) return res.send('missing required field comment')
-
-    const itemX = await ItemModel.findOne({ _id: bookId })
-    if (!itemX) return res.send('no book exists')
-
-    itemX.comments.push(comment)
-    itemX.commentcount++
-    await itemX.save()
-    return res.send(itemX)
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: 'Server error' })
@@ -105,7 +67,55 @@ const deleteItem = async (req, res) => {
   }
 }
 
-// *** DELETE ALL ITEM ***
+// *** GET ALL ITEMS ***
+// GET /api/books
+const getAllItems = async (req, res) => {
+  try {
+    const allItemsX = await ItemModel.find()
+    if (!allItemsX) return res.send('no book exists')
+
+    // // Filter
+    // const filterItems = allItemsX.map((obj) => ({
+    //   _id: obj['_id'],
+    //   title: obj['title'],
+    //   commentcount: obj['commentcount'],
+    // }))
+
+    // return res.json(filterItems)
+
+    return res.json(allItemsX)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ error: 'Server error' })
+  }
+}
+
+// *** POST ITEM COMMENT ***
+// POST /api/books/:bookid Form Encoded: comment=XXX
+const postComment = async (req, res) => {
+  let bookId = req.params.bookid
+  const reqBody = req.body
+  const { comment } = reqBody
+
+  try {
+    if (!bookId) return res.send('no book exists')
+    if (!ObjectId.isValid(bookId)) return res.send('no book exists')
+    if (!comment) return res.send('missing required field comment')
+
+    const itemX = await ItemModel.findOne({ _id: bookId })
+    if (!itemX) return res.send('no book exists')
+
+    itemX.comments.push(comment)
+    itemX.commentcount++
+    await itemX.save()
+    return res.send(itemX)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ error: 'Server error' })
+  }
+}
+
+// *** DELETE ALL ITEMS ***
 // DELETE /api/books
 const deleteAllItems = async (req, res) => {
   try {
@@ -118,4 +128,4 @@ const deleteAllItems = async (req, res) => {
   }
 }
 
-module.exports = { postItem, getItem, postItemComment, deleteItem, deleteAllItems }
+module.exports = { postItem, getItem, getAllItems, postComment, deleteItem, deleteAllItems }

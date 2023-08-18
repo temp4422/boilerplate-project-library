@@ -10,12 +10,13 @@
 const {
   postItem,
   getItem,
-  postItemComment,
+  getAllItems,
+  postComment,
   deleteItem,
-  deleteAllItems
+  deleteAllItems,
 } = require('../controllers/itemController.js')
 
 module.exports = function (app) {
-  app.route('/api/books').post(postItem).get(getItem).delete(deleteAllItems)
-  app.route('/api/books/:bookid').get(getItem).post(postItemComment).delete(deleteItem)
+  app.route('/api/books').post(postItem).get(getAllItems).delete(deleteAllItems)
+  app.route('/api/books/:bookid').post(postComment).get(getItem).delete(deleteItem)
 }

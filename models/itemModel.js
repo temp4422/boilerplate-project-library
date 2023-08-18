@@ -5,7 +5,7 @@ const itemSchema = new mongoose.Schema({
   // _id // Mongoose add id property by default https://mongoosejs.com/docs/guide.html#_id
   title: { type: String, required: true },
   comments: { type: Array },
-  commentcount: { type: String },
+  commentcount: { type: Number, default: 0 },
   // assigned_to: { type: String, default: '', required: false },
   // status_text: { type: String, default: '', required: false },
   // open: { type: Boolean, default: true },
