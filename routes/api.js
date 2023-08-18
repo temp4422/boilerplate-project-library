@@ -7,9 +7,9 @@
  */
 'use strict'
 
-const { postItem, getItem, putItem, deleteItem } = require('../controllers/itemController.js')
+const { postItem, getItem, postItemComment, deleteItem } = require('../controllers/itemController.js')
 
 module.exports = function (app) {
-  app.route('/api/books').post(postItem)
-  app.route('/api/books/:bookid').get(getItem).put(putItem).delete(deleteItem)
+  app.route('/api/books').post(postItem).get(getItem)
+  app.route('/api/books/:bookid').get(getItem).post(postItemComment).delete(deleteItem)
 }

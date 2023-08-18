@@ -31,6 +31,20 @@ const getItem = async (req, res) => {
   let bookId = req.params.bookid
 
   try {
+    if (!bookId) {
+      const allItemsX = await ItemModel.find()
+
+      // // Filter fields
+      // const filteredItems = allItemsX.map((obj) => ({
+      //   _id: obj['_id'],
+      //   title: obj['title'],
+      //   commentcount: obj['commentcount'],
+      // }))
+
+      return res.json(allItemsX)
+      // return res.json(filteredItems)
+    }
+
     const itemX = await ItemModel.findOne({ _id: bookId })
     if (!itemX) return res.send('no book exists')
     return res.json(itemX)
@@ -40,9 +54,9 @@ const getItem = async (req, res) => {
   }
 }
 
-// *** PUT ITEM ***
-// PUT /api/books/:bookid Form Encoded: comment=XXX
-const putItem = async (req, res) => {
+// *** POST ITEM.COMMENT ***
+// POST /api/books/:bookid Form Encoded: comment=XXX
+const postItemComment = async (req, res) => {
   let bookId = req.params.bookid
   const reqBody = req.body
   const { comment } = reqBody
@@ -53,6 +67,8 @@ const putItem = async (req, res) => {
     if (!comment) return res.send('missing required field comment')
 
     const itemX = await ItemModel.findOne({ _id: bookId })
+    if (!itemX) return res.send('no book exists')
+
     itemX.comments.push(comment)
     itemX.commentcount++
     await itemX.save()
@@ -80,4 +96,4 @@ const deleteItem = async (req, res) => {
   }
 }
 
-module.exports = { postItem, getItem, putItem, deleteItem }
+module.exports = { postItem, getItem, postItemComment, deleteItem }
