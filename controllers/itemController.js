@@ -89,7 +89,9 @@ const deleteItem = async (req, res) => {
     if (!ObjectId.isValid(bookId)) return res.send('no book exists')
 
     const itemX = await ItemModel.deleteOne({ _id: bookId })
-    res.send('delete successful')
+    if (!itemX.deletedCount) return res.send('no book exists')
+
+    return res.send('delete successful')
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: 'Server error' })

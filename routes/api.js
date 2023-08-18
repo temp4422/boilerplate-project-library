@@ -7,7 +7,12 @@
  */
 'use strict'
 
-const { postItem, getItem, postItemComment, deleteItem } = require('../controllers/itemController.js')
+const {
+  postItem,
+  getItem,
+  postItemComment,
+  deleteItem,
+} = require('../controllers/itemController.js')
 
 module.exports = function (app) {
   app.route('/api/books').post(postItem).get(getItem)

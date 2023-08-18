@@ -415,5 +415,47 @@
             ]
         },
         "tests": []
+    },
+    {
+        "_id": "e17e89ca-74f5-4b0a-aa83-f820412dfda6",
+        "colId": "history",
+        "containerId": "",
+        "name": "http://localhost:3000/api/books/ssdf6570ed3f85663b2163a2",
+        "url": "http://localhost:3000/api/books/ssdf6570ed3f85663b2163a2",
+        "method": "DELETE",
+        "sortNum": 0,
+        "created": "2023-08-18T12:38:45.585Z",
+        "modified": "2023-08-18T12:38:45.585Z",
+        "headers": [],
+        "params": [],
+        "tests": []
+    },
+    {
+        "_id": "31fed0bf-8061-492c-809f-cfb2dde04a4b",
+        "colId": "history",
+        "containerId": "",
+        "name": "http://localhost:3000/api/books/6sdf6570ed3f85663b2163a2",
+        "url": "http://localhost:3000/api/books/6sdf6570ed3f85663b2163a2",
+        "method": "DELETE",
+        "sortNum": 0,
+        "created": "2023-08-18T12:38:50.328Z",
+        "modified": "2023-08-18T12:38:50.328Z",
+        "headers": [],
+        "params": [],
+        "tests": []
+    },
+    {
+        "_id": "b9c2d5ce-6a15-405c-ac94-a1706163733c",
+        "colId": "history",
+        "containerId": "",
+        "name": "http://localhost:3000/api/books/64df665ed018beed9af84dad",
+        "url": "http://localhost:3000/api/books/64df665ed018beed9af84dad",
+        "method": "DELETE",
+        "sortNum": 0,
+        "created": "2023-08-18T12:39:00.320Z",
+        "modified": "2023-08-18T12:39:00.320Z",
+        "headers": [],
+        "params": [],
+        "tests": []
     }
 ]
