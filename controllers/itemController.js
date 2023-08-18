@@ -19,8 +19,8 @@ const postItem = async (req, res) => {
 
     await itemX.save()
     return res.json({ _id: itemX._id, title: itemX.title })
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
     return res.status(500).json({ error: 'Server error' })
   }
 }
@@ -32,11 +32,13 @@ const getItem = async (req, res) => {
 
   try {
     if (!bookId) return res.send('no book exists')
+    if (!ObjectId.isValid(bookId)) return res.send('no book exists')
+
     const itemX = await ItemModel.findOne({ _id: bookId })
     if (!itemX) return res.send('no book exists')
     return res.json(itemX)
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
     return res.status(500).json({ error: 'Server error' })
   }
 }
@@ -47,22 +49,15 @@ const deleteItem = async (req, res) => {
   let bookId = req.params.bookid
 
   try {
-    if (!bookId) {
-      const allItemsX = await ItemModel.deleteMany()
-      console.log(allItemsX)
-
-      // if (!itemX.deletedCount) return res.send('no book exists')
-
-      return res.send('delete successful')
-    }
+    if (!bookId) return res.send('no book exists')
     if (!ObjectId.isValid(bookId)) return res.send('no book exists')
 
     const itemX = await ItemModel.deleteOne({ _id: bookId })
     if (!itemX.deletedCount) return res.send('no book exists')
 
     return res.send('delete successful')
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
     return res.status(500).json({ error: 'Server error' })
   }
 }
@@ -84,8 +79,8 @@ const getAllItems = async (req, res) => {
     // return res.json(filterItems)
 
     return res.json(allItemsX)
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
     return res.status(500).json({ error: 'Server error' })
   }
 }
@@ -109,8 +104,8 @@ const postComment = async (req, res) => {
     itemX.commentcount++
     await itemX.save()
     return res.send(itemX)
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
     return res.status(500).json({ error: 'Server error' })
   }
 }
@@ -122,8 +117,8 @@ const deleteAllItems = async (req, res) => {
     const allItemsX = await ItemModel.deleteMany()
     if (!allItemsX) return res.send('no book exists')
     return res.send('complete delete successful')
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
     return res.status(500).json({ error: 'Server error' })
   }
 }
