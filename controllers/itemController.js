@@ -6,28 +6,16 @@ const { ItemModel } = require('../models/itemModel.js')
 // *** POST ITEM ***
 // POST /api/books Form Encoded: title=titleX
 const postItem = async (req, res) => {
-  // let projectName = req.params.project // this take value from /api/issues/ANYPROJECT
-
-  // Use destructuring assignment to pull all fields from body object
   let reqBody = req.body
-  console.log(reqBody)
   const { title } = reqBody
-
-  // Use try...catch block to handle errors for async operations
   try {
-    // Check required fields
     if (!title) return res.send('missing required field title')
 
-    // Create issue
-    // CUATION ! use either save() or create(), but not both, because it's duplicate https://stackoverflow.com/questions/38290684/mongoose-save-vs-insert-vs-create
     const itemX = new ItemModel({
       // _id automatically added
       title: title,
       comments: [],
       commentcount: 0,
-      // issue_title: issue_title, // Required
-      // issue_text: issue_text, // Required
-      // created_by: created_by, // Required
     })
 
     // Find project with ASYNC opearation, must use 'await'!
@@ -49,28 +37,14 @@ const postItem = async (req, res) => {
 }
 
 // *** GET ITEM ***
-// GET /api/issues/apitest?open=false&issue_title=titleX&issue_text=textX
+// GET /api/books/:bookid
 const getItem = async (req, res) => {
-    let bookId = req.params
-    console.log(bookId)
-
+  let bookId = req.params.bookid
 
   try {
-    const projectX = await ProjectModel.findOne({ project_name: projectName })
-
-    if (!projectX) return res.json("Project doesn't exist")
-
-    let issuesX = projectX.issues
-
-    // Filtering issues
-    Object.keys(reqQuery).forEach((field) => {
-      const filterValue = reqQuery[field]
-      issuesX = issuesX.filter((issue) => {
-        return issue[field].toString().toLowerCase() === filterValue.toString().toLowerCase()
-      })
-    })
-
-    return res.json(issuesX)
+    const itemX = await ItemModel.findOne({ _id: bookId })
+    if (!itemX) return res.send('no book exists')
+    return res.json(itemX)
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: 'Server error' })
